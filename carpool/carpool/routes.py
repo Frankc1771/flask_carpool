@@ -31,8 +31,8 @@ def password_validate(password):
     return False
 
 def check_expired():
-    #expired = Carpool.query.filter(Carpool.start < datetime.utcnow(), Carpool.carpool_type=='temporary').all()
-    expired = Carpool.query.all()
+    expired = Carpool.query.filter(Carpool.start < datetime.utcnow(), Carpool.carpool_type=='temporary').all()
+    #expired = Carpool.query.all()
     if expired:
         # helper function to find total days to increase date checked for expiration
         def find_dayIncrease(carpool):
@@ -100,10 +100,12 @@ def check_expired():
                 print(f'third case continue, days of the week selected {carpool.days} and dayIncease + day is {dayIncrease} + {day}')
                 continue
         # expire carpools where date exceeds max date for temporary carpool
+            print("-----------------------------------")
+            print("-----------------------------------")
+            print(f'deleted expired {carpool.start}, compared to {datetime.utcnow()}')
             db.session.delete(carpool)
             db.session.commit()
             deleteFlag = True
-            print(f'deleted expired {carpool.start}')
         if deleteFlag == True:
             print('returned true because for loop executed and expired carpool didnt meet exceptions')
             return True
