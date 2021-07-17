@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="container">
+        {% include "flashes.html" %}
+
+        <h1 class="display-4">Add a Carpool</h1>
+        <form action="" method="POST">
+		{{ form.hidden_tag() }}
+            <div class="form-group" style="width: 75%">
+                {{ form.summary.label }}<br>
+				{{ form.summary(class_='form-control', type='text', placeholder='Summary')}}
+                <!--<input class="form-control" type="text" name="summary" placeholder="Summary">-->
+				 {% for error in form.summary.errors %}
+				<span style="color: red;">{{ error }}</span>
+				{% endfor %}
+            </div>
+            <div class="form-group">
+                {{ form.from_location.label }}
+				{{ form.from_location(class_='form-control', type='text', placeholder="Pick Up Location")}}
+                <!--<input class="form-control" type="text" name="from_location" placeholder="Pick-Up Location">-->
+				{% for error in form.from_location.errors %}
+				<span style="color: red;">{{ error }}</span>
+				{% endfor %}
+            </div>
+            <div class="form-group">
+                {{ form.to_location.label }}
+				{{ form.to_location(class_='form-control', type='text', placeholder='Destination')}}
+                <!--<input class="form-control" type="text" name="to_location" placeholder="Destination">-->
+				{% for error in form.to_location.errors %}
+				<span style="color: red;">{{ error }}</span>
+				{% endfor %}
+            </div>
+			<div class="form-group">
+				{{ form.start.label }}
+				{{ form.start(class_='form-control', type='text', placeholder='EXAMPLE: 2019-12-01 15:00')}}
+				<!--<input class="form-control" type="text" name="start" placeholder="EXAMPLE: 2019-12-01 15:00">-->
+				{% for error in form.start.errors %}
+				<span style="color: red;">{{ error }}</span>
+				{% endfor %}
+			</div>
+            <div class="form-group">
+                {{ form.capacity.label }}
+				{{ form.capacity(class_='form-control', type='number', placeholder='Number of Passengers')}}
+                <!--<input class="form-control" type="number" name="capacity" placeholder="Number of Occupants">-->
+				{% for error in form.capacity.errors %}
+				<span style="color: red;">{{ error }}</span>
+				{% endfor %}
+			</div>
+			<div class="form-group">
+				{{ form.carpool_type.label }}<br>
+				{% for subfield in form.carpool_type %}
+				<tr>
+					<td>{{ subfield }}&nbsp;{{ subfield.label }}</td>
+				</tr>
+				{% endfor %}<br>
+				{% for error in form.carpool_type.errors %}
+				<span style="color: red;">{{ error }}</span>
+				{% endfor %}
+			</div>
+			<div class="form-group">
+				{{ form.days.label }}<br>
+				{% for subfield in form.days %}
+				<tr>
+					<td>{{ subfield }}&nbsp;{{ subfield.label }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+				</tr>
+				{% endfor %}<br>
+				{% for error in form.days.errors %}
+				<span style="color: red;">{{ error }}</span>
+				{% endfor %}
+			</div>
+			<p>{{ form.submit() }}</p>
+        </form>
+    </div>
+{% endblock %}

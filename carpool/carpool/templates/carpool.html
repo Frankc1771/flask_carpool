@@ -1,0 +1,17 @@
+{% extends "base.html" %} {% block content %}
+
+<div class="container">
+  <h1 class="display-4">{{ carpool["to_location"] }}</h1>
+  <p>by: {{ carpool["name"] }}</p>
+  <p>{{ carpool["summary"] }}</p>
+  <p>From: {{ carpool["from_location"] }} To: {{carpool["to_location"] }}</p>
+  {% if carpool["carpool_type"] == "reoccurring" %}
+	<p>Starting on {{ moment(carpool["start"]).format('LLL') }}</p>
+  {% else %}
+	<p>Carpool is temporary and active on {{ moment(carpool["start"]).format('LLL') }}</p>
+  {% endif %}
+  {% if carpool["carpool_type"] == "reoccurring" %}
+	<p>This carpool will be active on the following days of the week....{{ carpool["days"] }}</p>
+  {% endif %}
+</div>
+{% endblock %}

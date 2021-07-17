@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="container">
+        <h1 class="display-4">Search results for "{{ query }}"</h1>
+        
+        {% include "flashes.html" %}
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Username</th>
+					<th scope="col">Start Date</th>
+                    <th scope="col">From</th>
+					<th scope="col">To</th>
+					<th scope="col">Capacity</th>
+					<th scope="col">Days</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for carpool in arrival %}
+                    <tr>
+                        <td><a href="/my_carpools/{{ carpool["name"] }}">{{ carpool["name"] }}</a></td>
+						<td>{{ moment(carpool["start"]).format('LLL') }}</td>
+                        <td>{{ carpool["from_location"] }}</td>
+						<td>{{ carpool["to_location"] }}</td>
+						<td>{{ carpool["quantity"] }} / {{ carpool["capacity"] }}</td>		
+						{% if carpool["carpool_type"] == "reoccurring" %}
+							<td>{{ carpool["days"] }}</td>
+						{% else %}
+							<td>Temporary</td>
+						{% endif %}
+						<td>
+						<a
+						class="btn btn-outline-secondary"
+						href="/carpools/{{ carpool['id'] }}"
+						>View page</a
+						>
+						<a
+						class="btn btn-outline-secondary"
+						href="/join/{{ carpool['id'] }}"
+						>Join</a
+						>
+						<a
+						class="btn btn-outline-secondary"
+						href="/leave/{{ carpool['id'] }}"
+						>Leave</a
+						>
+						</td>
+					</tr>
+                {% endfor %}
+				{% for carpool in destination %}
+                    <tr>
+                        <td><a href="/my_carpools/{{ carpool["name"] }}">{{ carpool["name"] }}</a></td>
+						<td>{{ moment(carpool["start"]).format('LLL') }}</td>
+                        <td>{{ carpool["from_location"] }}</td>
+						<td>{{ carpool["to_location"] }}</td>
+						<td>{{ carpool["quantity"] }} / {{ carpool["capacity"] }}</td>		
+						{% if carpool["carpool_type"] == "reoccurring" %}
+							<td>{{ carpool["days"] }}</td>
+						{% else %}
+							<td>Temporary</td>
+						{% endif %}
+						<td>
+						<a
+						class="btn btn-outline-secondary"
+						href="/carpools/{{ carpool['id'] }}"
+						>View page</a
+						>
+						<a
+						class="btn btn-outline-secondary"
+						href="/join/{{ carpool['id'] }}"
+						>Join</a
+						>
+						<a
+						class="btn btn-outline-secondary"
+						href="/leave/{{ carpool['id'] }}"
+						>Leave</a
+						>
+						</td>	
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
