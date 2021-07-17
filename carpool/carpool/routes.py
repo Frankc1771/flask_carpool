@@ -64,6 +64,7 @@ def check_expired():
                 return dayIncrease
 
         deleteFlag = False
+        carpoolsExpired = []
         for carpool in expired:
             month = int(carpool.start.month)
             year = int(carpool.start.year)
@@ -103,12 +104,14 @@ def check_expired():
             print("-----------------------------------")
             print("-----------------------------------")
             print(f'deleted expired {carpool.start}, compared to {datetime.utcnow()}')
+            carpoolsExpired.append(str(carpool.id))
+            print(f'carpool deletion list is {carpoolsExpired}')
             db.session.delete(carpool)
             db.session.commit()
             deleteFlag = True
         if deleteFlag == True:
             print('returned true because for loop executed and expired carpool didnt meet exceptions')
-            return True
+            return (deleteFlag, carpoolsExpired)
         else:
             print('had expired db results, but exceptions were met, so no deletions were made')
             return False
@@ -275,7 +278,9 @@ def join(carpool_id):
     """
     Join a carpool
     """
-    if check_expired():
+    deleteFlag, carpoolsExpired = check_expired()
+    if carpool_id in carpoolsExpired:
+        print(f'I am here and the carpool_id was in carpoolsExpired')
         flash("Carpool was expired", 'danger')
         return redirect("/")
     if current_user.is_authenticated:

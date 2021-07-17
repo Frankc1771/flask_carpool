@@ -14,7 +14,8 @@
         <th scope="col">To</th>
 		<th scope="col">Capacity</th>
 		<th scope="col">Start Date</th>
-		<th scope="col">Days</th>
+		<th scope="col">Type</th>
+        <th scope="col">Days</th>
       </tr>
     </thead>
     <tbody>
@@ -26,11 +27,18 @@
         <td>{{ carpool["to_location"] }}</td>
 		<td>{{ carpool["quantity"] }} / {{ carpool["capacity"] }}</td>
 		<td>{{ moment(carpool["start"]).format('LLL') }}</td>
+        <td>{{ carpool["carpool_type"] }}</td>
+        {% if carpool["days"] == "" %}
+            <td>{{ moment().format('dddd') }}</td>
+        {% else %}
+            <td style="text-transform: capitalize">{{ carpool["days"] }}</td>
+        {% endif %}
+        <!--
 		{% if carpool["carpool_type"] == "reoccurring" %}
 			<td>{{ carpool["days"] }}</td>
 		{% else %}
 			<td>Temporary</td>
-		{% endif %}
+		{% endif %} -->
 		<td>
           <a
             class="btn btn-outline-secondary"
