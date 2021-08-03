@@ -1,10 +1,18 @@
 TODO
 
-On server side check save valid data on form. On client-side check data saves, but on server side catch all formed data is cleared.(login,sign-up, add carpool date check) 
-
-When to expire reoccurring carpools
-
 Priority
 ----------------------
 Make decision how reoccuring carpools will expire or not.
+Add comments throughout files
+Add pickup carpools times or keep it in description?
+Add messaging from user to user? 
+Server side check to save valid data on form and refresh form data? (login,sign-up, add carpool date check) 
+Pagination support for carpools
+Reset password support (Forgot Password)
+move functions to methods of classes?
+Notification to carpool creator that someone joined their carpool.
 
+
+Current
+--------------------------------
+Fix Carpool form to save data when server side check is issues. Switch redirect to render template fixes issues. 

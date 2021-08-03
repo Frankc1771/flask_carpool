@@ -86,7 +86,7 @@ def check_expired():
                     print(f'first case continue {maxDate}')
                     continue
             # second exception check if carpool start date is at the end of a month and make adjustment to check against next month date
-            elif day + dayIncrease > 28 and month != 12:
+            elif day + dayIncrease > 28 and month != 12 and year == int(datetime.utcnow().year):
                 rng = calendar.monthrange(year, month)
                 if day + dayIncrease > int(rng[1]):
                     newDay = day + dayIncrease
@@ -96,7 +96,7 @@ def check_expired():
                         print(f'second case continue {maxDate}')
                         continue
             # third exception check if carpool is still valid using latest day for the carpool
-            elif day + dayIncrease > int(datetime.utcnow().day):
+            elif day + dayIncrease > int(datetime.utcnow().day) and month == int(datetime.utcnow().month) and year == int(datetime.utcnow().year):
                 print(f'testing carpool start date...{carpool.start} {carpool.start.day}')
                 print(f'third case continue, days of the week selected {carpool.days} and dayIncease + day is {dayIncrease} + {day}')
                 continue
@@ -157,7 +157,7 @@ def signup():
         # check if username exists
         if User.query.filter_by(name=form.name.data).first():
             flash("Username is already taken", "danger")
-            return redirect(url_for("signup"))
+            return render_template("signup.html", form=form)
         else:
             if password_validate(form.password.data):
                 # create user object and add it to the DB
@@ -172,7 +172,7 @@ def signup():
             else:
                 flash("Password must contain one symbol, one uppercase,\
                       and one digit!", "danger")
-                return redirect(url_for("signup"))
+                return render_template("signup.html", form=form)
     return render_template("signup.html", form=form)
 
 @login_required
