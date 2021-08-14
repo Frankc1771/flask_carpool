@@ -4,10 +4,11 @@ from carpool.models import User, Carpool, passengers
 from werkzeug.urls import url_parse
 from flask_login import login_required, logout_user, current_user, login_user
 from carpool.forms import SignupForm, LoginForm, AddCarpoolForm, ChangePassword
-from datetime import datetime
+from datetime import datetime, timedelta
 from string import punctuation
 from pytz import timezone, utc
 import calendar
+
 
 def password_validate(password):
     """
@@ -31,8 +32,22 @@ def password_validate(password):
     return False
 
 def check_expired():
-    expired = Carpool.query.filter(Carpool.start < datetime.utcnow(), Carpool.carpool_type=='temporary').all()
+    def check_reoccurring():
+        """
+        function to check reoccurring carpools and see if they need to be deleted
+        """
+        expired = Carpool.query.filter((Carpool.start + timedelta(days=180)) < datetime.utcnow(), Carpool.carpool_type=='reoccurring', Carpool.quantity==0).all()
+        if expired:
+            for carpool in expired:
+                db.session.delete(carpool)
+                db.session.commit()
+                print('deleted reoccurring carpool')
+            return True
+        return False
+ 
     #expired = Carpool.query.all()
+    check_reoccurring()
+    expired = Carpool.query.filter(Carpool.start < datetime.utcnow(), Carpool.carpool_type=='temporary').all()
     if expired:
         # helper function to find total days to increase date checked for expiration
         def find_dayIncrease(carpool):
@@ -62,7 +77,6 @@ def check_expired():
                         elif daysOfWeek.index(day) > dayIncrease:
                             dayIncrease = daysOfWeek.index(day)
                 return dayIncrease
-
         deleteFlag = False
         carpoolsExpired = []
         for carpool in expired:
@@ -116,7 +130,7 @@ def check_expired():
             print('had expired db results, but exceptions were met, so no deletions were made')
             return False
     print('no db results for queue to select expired')
-    return False
+    return (False, [None])
 
 @app.route("/")
 @login_required
@@ -225,13 +239,15 @@ def add():
     # testing manual carpool entries
     if form.validate_on_submit():
         if Carpool.query.filter_by(from_location=form.from_location.data,
-                                   to_location = form.to_location.data).first():
+                                   to_location = form.to_location.data,
+                                   days = ', '.join(form.days.data)).first():
             flash("Carpool already exists", "danger")
             return redirect(url_for("add", form=form))
         else:
             if form.carpool_type.data == 'temporary' and datetime.now() > form.start.data:
                 flash("Cannot start a carpool before the current date", "danger")
-                return redirect(url_for("add", form=form))
+                return render_template("add.html", form=form) # changed to keep form data
+                #return redirect(url_for("add", form=form))
             startdate = form.start.data
             startdate = startdate.astimezone(utc)
             carpool =  Carpool(name=current_user.name, summary=form.summary.data,
@@ -246,7 +262,7 @@ def add():
             return redirect(url_for("index"))
     return render_template("add.html", form=form)
 
-#TEST CASES
+# TEST CASES
 @app.route("/test", methods=["GET", "POST"])
 @login_required
 def test():
