@@ -32,21 +32,31 @@ def password_validate(password):
     return False
 
 def check_expired():
+    """
+    checks to see if any carpools should be deleted
+    reoccurring carpools delete after 6 months if no one is in the carpool
+    temporary carpools delete after the last valid day for the carpool
+    returns  status if a carpool was deleted and 
+    carpools_id of deleted carpools to display correct error message
+    """
     def check_reoccurring():
         """
         function to check reoccurring carpools and see if they need to be deleted
+        returns deleted carpools id
         """
+        carpoolsExpired = []
         expired = Carpool.query.filter((Carpool.start + timedelta(days=180)) < datetime.utcnow(), Carpool.carpool_type=='reoccurring', Carpool.quantity==0).all()
         if expired:
             for carpool in expired:
+                carpoolsExpired.append(str(carpool.id))
                 db.session.delete(carpool)
                 db.session.commit()
                 print('deleted reoccurring carpool')
-            return True
-        return False
+            return (True, carpoolsExpired)
+        return (False, carpoolsExpired)
  
-    #expired = Carpool.query.all()
-    check_reoccurring()
+    #expired = Carpool.query.all() #for testing
+    status, reoccurringExpired = check_reoccurring()
     expired = Carpool.query.filter(Carpool.start < datetime.utcnow(), Carpool.carpool_type=='temporary').all()
     if expired:
         # helper function to find total days to increase date checked for expiration
@@ -125,12 +135,12 @@ def check_expired():
             deleteFlag = True
         if deleteFlag == True:
             print('returned true because for loop executed and expired carpool didnt meet exceptions')
-            return (deleteFlag, carpoolsExpired)
+            return (True, carpoolsExpired, reoccurringExpired)
         else:
             print('had expired db results, but exceptions were met, so no deletions were made')
-            return False
+            return (False, [None], reoccurringExpired)
     print('no db results for queue to select expired')
-    return (False, [None])
+    return (False, [None], reoccurringExpired)
 
 @app.route("/")
 @login_required
@@ -236,7 +246,6 @@ def add():
     """
     check_expired()
     form = AddCarpoolForm()
-    # testing manual carpool entries
     if form.validate_on_submit():
         if Carpool.query.filter_by(from_location=form.from_location.data,
                                    to_location = form.to_location.data,
@@ -246,8 +255,7 @@ def add():
         else:
             if form.carpool_type.data == 'temporary' and datetime.now() > form.start.data:
                 flash("Cannot start a carpool before the current date", "danger")
-                return render_template("add.html", form=form) # changed to keep form data
-                #return redirect(url_for("add", form=form))
+                return render_template("add.html", form=form)
             startdate = form.start.data
             startdate = startdate.astimezone(utc)
             carpool =  Carpool(name=current_user.name, summary=form.summary.data,
@@ -294,8 +302,9 @@ def join(carpool_id):
     """
     Join a carpool
     """
-    deleteFlag, carpoolsExpired = check_expired()
-    if carpool_id in carpoolsExpired:
+    #check if carpool is expired and delete expired carpools
+    deleteFlag, carpoolsExpired, reoccurringExpired = check_expired()
+    if carpool_id in carpoolsExpired or carpool_id in reoccurringExpired:
         print(f'I am here and the carpool_id was in carpoolsExpired')
         flash("Carpool was expired", 'danger')
         return redirect("/")
