@@ -1,0 +1,11 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\carpool",
+    "\\carpool\\carpool",
+    "\\carpool\\carpool\\static",
+    "\\carpool\\carpool\\templates"
+  ],
+  "SelectedNode": "\\carpool\\carpool\\routes.py",
+  "PreviewInSolutionExplorer": false
+}

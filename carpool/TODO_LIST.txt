@@ -1,26 +1,14 @@
 TODO
 
-Client and Server side check to delete old carpools.  When joining a carpool check to see if the carpool is expired and display error to user and clear from DB 
-
-On server side check save valid data on form. On client-side check data saves, but on server side catch all formed data is cleared.(login,sign-up, add carpool date check) 
-
-When to expire reoccurring carpools
-
-Carpool temporary do not show days. Temporary orginally was meant to just be one day? Switched to temporary carpool for one week duration and needs to show days.
-Add type column and seperate days of the week to new column on template
-
-Change check expiration function to only flash to the user if they tried to join an expired carpool which was deleted, but not when the function executes.
-
-check expiration needs to consult times to expire as well
+Priority
+----------------------
+Add messaging from user to user? 
+Pagination support for carpools
+Reset password support (Forgot Password)
+move functions to methods of classes?
+Notification to carpool creator that someone joined their carpool.
 
 
-07/15/21
-
-WORK ON Check expiration times and test it against times
-work on only triggering flash when actively trying to join expired carpool not if the function is running
-If time also fix template to show carpools temporary and show the days selected make two columns for type and days
-Make decision how reoccuring carpools will expire or not.
-
-Current Issue
-------------------------------------------------
-Time zone saved in UTC displayed in local time, but expired in not consistent time zones. Time zone coversion is incorrect and needs to be corrected. 
+Current
+--------------------------------
+Pagination Support on homepage and user page.
