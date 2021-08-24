@@ -11,5 +11,4 @@ Notification to carpool creator that someone joined their carpool.
 
 Current
 --------------------------------
-Move functions to classes 
 Pagination Support on homepage and user page.
