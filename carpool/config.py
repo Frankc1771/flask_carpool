@@ -9,3 +9,4 @@ class Config:
     ) or "sqlite:///" + os.path.join(base_directory, "app.db")
     SECRET_KEY = os.environ.get("SECRET_KEY") or "testing123"
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    POSTS_PER_PAGE = 1

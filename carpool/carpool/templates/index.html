@@ -1,64 +1,61 @@
 {% extends "base.html" %} {% block content %}
 <div class="container">
-  {% include "flashes.html" %}
-  <h1 class="display-4">Currently available carpools</h1>
-	<div class="container">
-		<a class="btn btn-primary" href="/add">Add A Carpool</a>
-	</div>
-	<br>
-  <table class="table">
-    <thead>
-      <tr>
-        <th scope="col">User</th>
-        <th scope="col">From</th>
-        <th scope="col">To</th>
-		<th scope="col">Capacity</th>
-		<th scope="col">Start Date</th>
-		<th scope="col">Type</th>
-        <th scope="col">Days</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for carpool in carpools %}
-      <tr>
-        <td><a href="/my_carpools/{{ carpool["name"] }}">{{ carpool["name"] }}</a></td>
-        <!--<td>{{ moment(carpool["time_created"]).format('LLL') }}</td> -->
-        <td>{{ carpool["from_location"] }}</td>
-        <td>{{ carpool["to_location"] }}</td>
-		<td>{{ carpool["quantity"] }} / {{ carpool["capacity"] }}</td>
-		<td>{{ moment(carpool["start"]).format('LLL') }}</td>
-        <td>{{ carpool["carpool_type"] }}</td>
-        {% if carpool["days"] == "" %}
-            <td>{{ moment().format('dddd') }}</td>
-        {% else %}
-            <td style="text-transform: capitalize">{{ carpool["days"] }}</td>
-        {% endif %}
-        <!--
-		{% if carpool["carpool_type"] == "reoccurring" %}
-			<td>{{ carpool["days"] }}</td>
-		{% else %}
-			<td>Temporary</td>
-		{% endif %} -->
-		<td>
-          <a
-            class="btn btn-outline-secondary"
-            href="/carpools/{{ carpool['id'] }}"
-            >View page</a
-          >
-		  <a
-            class="btn btn-outline-secondary"
-            href="/join/{{ carpool['id'] }}"
-            >Join</a
-          >
-		  <a
-            class="btn btn-outline-secondary"
-            href="/leave/{{ carpool['id'] }}"
-            >Leave</a
-          >
-        </td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+    {% include "flashes.html" %}
+    <h1 class="display-4">Currently available carpools</h1>
+    <div class="container">
+        <a class="btn btn-primary" href="/add">Add A Carpool</a>
+    </div>
+    <br>
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">User</th>
+                <th scope="col">From</th>
+                <th scope="col">To</th>
+                <th scope="col">Capacity</th>
+                <th scope="col">Start Date</th>
+                <th scope="col">Type</th>
+                <th scope="col">Days</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for carpool in carpools %}
+            <tr>
+                <td><a href="/my_carpools/{{ carpool["name"] }}">{{ carpool["name"] }}</a></td>
+                <!--<td>{{ moment(carpool["time_created"]).format('LLL') }}</td> -->
+                <td>{{ carpool["from_location"] }}</td>
+                <td>{{ carpool["to_location"] }}</td>
+                <td>{{ carpool["quantity"] }} / {{ carpool["capacity"] }}</td>
+                <td>{{ moment(carpool["start"]).format('LLL') }}</td>
+                <td>{{ carpool["carpool_type"] }}</td>
+                {% if carpool["days"] == "" %}
+                <td>{{ moment().format('dddd') }}</td>
+                {% else %}
+                <td style="text-transform: capitalize">{{ carpool["days"] }}</td>
+                {% endif %}
+                <!--
+                {% if carpool["carpool_type"] == "reoccurring" %}
+                    <td>{{ carpool["days"] }}</td>
+                {% else %}
+                    <td>Temporary</td>
+                {% endif %} -->
+                <td>
+                    <a class="btn btn-outline-secondary"
+                       href="/carpools/{{ carpool['id'] }}">View page</a>
+                    <a class="btn btn-outline-secondary"
+                       href="/join/{{ carpool['id'] }}">Join</a>
+                    <a class="btn btn-outline-secondary"
+                       href="/leave/{{ carpool['id'] }}">Leave</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 </div>
+    {% if prev_url %}
+<a href="{{ prev_url }}">Newer posts</a>
+    {% endif %}
+    {% if next_url %}
+<a href="{{ next_url }}">Older posts</a>
+    {% endif %}
 {% endblock %}

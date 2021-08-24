@@ -11,4 +11,4 @@ Notification to carpool creator that someone joined their carpool.
 
 Current
 --------------------------------
-Pagination Support on homepage and user page.
+Change new page/old display for pagination. Add pagination to users profile page. 

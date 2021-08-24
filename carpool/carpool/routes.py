@@ -10,7 +10,13 @@ from pytz import timezone, utc
 @app.route("/")
 @login_required
 def index():
-    return render_template("index.html", carpools=Carpool.get_all())
+    page = request.args.get('page', 1, type=int)
+    carpools = Carpool.get_all().paginate(page, app.config['POSTS_PER_PAGE'], False)
+    next_url = url_for('index', page=carpools.next_num) \
+        if carpools.has_next else None
+    prev_url = url_for('index', page=carpools.prev_num) \
+        if carpools.has_prev else None
+    return render_template("index.html", carpools=carpools.items, next_url=next_url, prev_url=prev_url)
 
 
 @app.route("/login", methods=["GET", "POST"])
